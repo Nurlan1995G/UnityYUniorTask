@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speed;
-    private bool _moveRight = false;
     [SerializeField] private Transform _groundDetect;
+    [SerializeField] private float _speed;
+    
+    private bool _moveRight = false;
 
     private void Update()
     {

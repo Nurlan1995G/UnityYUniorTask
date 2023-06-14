@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpHeight;
+    [SerializeField] private Transform _checkGround;
 
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
@@ -21,13 +22,13 @@ public class Player : MonoBehaviour
         int operationIdle = 1;
         int operationRun = 2;
 
-        if (Input.GetKey(KeyCode.None))
+        if (Input.GetAxis("Horizontal") == 0)
         {
             _animator.SetInteger("State", operationIdle);
         }
         else
         {
-            Flip();
+            Rotate();
             _animator.SetInteger("State", operationRun);
         }
 
@@ -40,11 +41,11 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space))
         {
-            _rigidbody2D.AddForce(transform.up * _jumpHeight, ForceMode2D.Impulse);
+            _rigidbody2D.AddForce(Vector2.up * _jumpHeight, ForceMode2D.Force);
         }
     }
 
-    private void Flip()
+    private void Rotate()
     {
         int rotationLeft = 180;
 
