@@ -20,18 +20,16 @@ public class Alarm : MonoBehaviour
 
     private void Update()
     {
-        
+        SetAlarm();
     }
 
-    private void StartAlarm()
+    private void SetAlarm()
     {
-        _pathRunningTime += Time.deltaTime;
-        Source();
-    }
+        if (_isReached)
+            _pathRunningTime += Time.deltaTime;
+        else
+            _pathRunningTime -= Time.deltaTime; 
 
-    private void StopAlarm()
-    {
-        _pathRunningTime -= Time.deltaTime;
         Source();
     }
 
@@ -39,26 +37,20 @@ public class Alarm : MonoBehaviour
     {
         _audioSource.volume = _pathRunningTime / _increaseTimeVolume;
     }
-/*
-    private event UnityAction Reached
-    {
-        add => _alarm.AddListener(value);
-        remove => _alarm.RemoveListener(value);
-    }*/
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Player>(out Player player))
         {
-            StartAlarm();
             _alarm?.Invoke();
+            _isReached = true;
             Debug.Log("В дом кто-то проник, сирена включилась!");
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        StopAlarm();
+        _isReached = false;
         Debug.Log("В доме больше нет никого!");
     }
 }
