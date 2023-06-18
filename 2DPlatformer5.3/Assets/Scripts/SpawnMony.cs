@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnMony : MonoBehaviour
 {
-    [SerializeField] private GameObject _template;
+    [SerializeField] private Money _template;
     [SerializeField] private Transform _path;
     [SerializeField] private float _spawnTime;
 
