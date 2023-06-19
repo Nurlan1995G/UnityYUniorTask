@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
+[RequireComponent (typeof(Rigidbody2D))]
 public class MovePlayer : MonoBehaviour
 {
     [SerializeField] private float _speed;
@@ -9,6 +11,9 @@ public class MovePlayer : MonoBehaviour
 
     private Rigidbody2D _rigidbody2D;
     private Animator _animator;
+
+    private const string State = "State";
+    private const string Horizontal = "Horizontal";
 
     private void Start()
     {
@@ -23,13 +28,13 @@ public class MovePlayer : MonoBehaviour
 
         Rotate();
 
-        if (Input.GetAxis("Horizontal") == 0)
+        if (Input.GetAxis(Horizontal) == 0)
         {
-            _animator.SetInteger("State", operationIdle);
+            _animator.SetInteger(State, operationIdle);
         }
         else
         {
-            _animator.SetInteger("State", operationRun);
+            _animator.SetInteger(State, operationRun);
         }
 
         FixedUpdate();
@@ -37,7 +42,7 @@ public class MovePlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rigidbody2D.velocity = new Vector2(Input.GetAxis("Horizontal") * _speed, _rigidbody2D.velocity.y);
+        _rigidbody2D.velocity = new Vector2(Input.GetAxis(Horizontal) * _speed, _rigidbody2D.velocity.y);
 
         if (Input.GetKeyDown(KeyCode.Space))
             _rigidbody2D.AddForce(Vector2.up * _jumpHeight, ForceMode2D.Force);
