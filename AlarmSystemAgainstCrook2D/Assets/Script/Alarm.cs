@@ -3,54 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+[RequireComponent(typeof(AudioSource))]
 public class Alarm : MonoBehaviour
 {
     [SerializeField] private UnityEvent _alarm;
-    [SerializeField] private float _increaseTimeVolume;
+    [SerializeField] private float _pathRunningTime;  
 
+    private int _receivedValue;  
+    private Coroutine _coroutine;
     private AudioSource _audioSource;
-    private float _pathRunningTime;   
-    private bool _isReached;
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
         _audioSource.volume = 0;
     }
-
-    private void Update()
+  
+    public void WorkCoroutine(Collider2D collision)
     {
-        SetAlarm();
-    }
-
-    private void SetAlarm()
-    {
-        if (_isReached)
-            _pathRunningTime += Time.deltaTime;
-        else
-            _pathRunningTime -= Time.deltaTime; 
-
-        Source();
-    }
-
-    private void Source()
-    {
-        _audioSource.volume = _pathRunningTime / _increaseTimeVolume;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent<Player>(out Player player))
+        if (collision.TryGetComponent(out Player player))
         {
-            _alarm?.Invoke();
-            _isReached = true;
-            Debug.Log("В дом кто-то проник, сирена включилась!");
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+
+            _coroutine = StartCoroutine(CreateCoroutine());
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    public void PlaySound(Collider2D collision)
     {
-        _isReached = false;
-        Debug.Log("В доме больше нет никого!");
+        _receivedValue = 1;
+        _audioSource.Play();
+        WorkCoroutine(collision);
+    }
+
+    public void StopSound(Collider2D collision)
+    {
+        _receivedValue = 0;
+        WorkCoroutine(collision);
+    }
+
+    private IEnumerator CreateCoroutine() 
+    {
+        while(_audioSource.volume != _receivedValue)
+        {
+            _audioSource.volume = Mathf.MoveTowards(_audioSource.volume,_receivedValue,_pathRunningTime * Time.deltaTime);
+            yield return null;
+        }
     }
 }
