@@ -21,14 +21,18 @@ public class Alarm : MonoBehaviour
   
     public void PlaySound(Collider2D collision)
     {
-        _receivedValue = 1;
+        int maxValue = 1;
+
+        _receivedValue = maxValue;
         _audioSource.Play();
         CheckCoroutine(collision);
     }
 
     public void StopSound(Collider2D collision)
     {
-        _receivedValue = 0;
+        int minValue = 0;
+
+        _receivedValue = minValue;
         CheckCoroutine(collision);
     }
 
