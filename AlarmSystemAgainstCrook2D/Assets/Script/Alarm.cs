@@ -19,7 +19,20 @@ public class Alarm : MonoBehaviour
         _audioSource.volume = 0;
     }
   
-    public void WorkCoroutine(Collider2D collision)
+    public void PlaySound(Collider2D collision)
+    {
+        _receivedValue = 1;
+        _audioSource.Play();
+        CheckCoroutine(collision);
+    }
+
+    public void StopSound(Collider2D collision)
+    {
+        _receivedValue = 0;
+        CheckCoroutine(collision);
+    }
+
+    private void CheckCoroutine(Collider2D collision)
     {
         if (collision.TryGetComponent(out Player player))
         {
@@ -30,19 +43,6 @@ public class Alarm : MonoBehaviour
 
             _coroutine = StartCoroutine(CreateCoroutine());
         }
-    }
-
-    public void PlaySound(Collider2D collision)
-    {
-        _receivedValue = 1;
-        _audioSource.Play();
-        WorkCoroutine(collision);
-    }
-
-    public void StopSound(Collider2D collision)
-    {
-        _receivedValue = 0;
-        WorkCoroutine(collision);
     }
 
     private IEnumerator CreateCoroutine() 
