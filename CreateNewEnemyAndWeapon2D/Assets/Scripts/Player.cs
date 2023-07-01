@@ -28,7 +28,6 @@ public class Player : MonoBehaviour
         _animator = GetComponent<Animator>();
         _currentHealth = _health;
         ChangedWeapon(_weapons[_currentNumberWeapon]);
-        _currentWeapon.Reload();
     }
 
     private void Update()
@@ -38,6 +37,12 @@ public class Player : MonoBehaviour
             _currentWeapon.Shoot(_shootPoint);
             _animator.Play(Shoot);
             StartCoroutine(Create());
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            _currentWeapon.Reload();
+            _animator.Play(Reload);
         }
     }
 

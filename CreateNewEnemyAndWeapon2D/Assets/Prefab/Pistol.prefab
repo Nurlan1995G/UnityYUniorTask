@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6212242312795960496}
   m_Layer: 0
   m_Name: Pistol
-  m_TagString: Untagged
+  m_TagString: Pistol
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -49,4 +49,3 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: 17dd3adc15cb901469a92835c53307a9, type: 3}
   _isBueyr: 0
   Bullet: {fileID: 2989011441370868002, guid: 8600765b03bd73548b182340721f85bc, type: 3}
-  _delay: 20
