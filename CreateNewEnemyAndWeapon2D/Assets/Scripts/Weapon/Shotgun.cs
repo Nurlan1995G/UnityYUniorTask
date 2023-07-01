@@ -6,7 +6,6 @@ using UnityEngine;
 public class Shotgun : Weapon
 {
     private int _maxCountBullets = 10;
-
     private int _currentCountBullets;
 
     public override void Reload()
@@ -27,5 +26,4 @@ public class Shotgun : Weapon
     {
         _currentCountBullets--;
     }
-
 }
