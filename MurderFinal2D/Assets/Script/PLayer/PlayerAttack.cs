@@ -8,34 +8,24 @@ public class PlayerAttack : PlayerAnimationController
     [SerializeField] private int _damage;
     [SerializeField] private int _health;
 
-    private bool _isAttack = false;
-
     private int _currentHealth;
-    private EnemyContr _currentEnemy;
+    protected EnemyContr _currentEnemy;
+
+    private MovePlayer _movePlayer;
 
     public event UnityAction<int,int> HealthChanched;
 
     private void Start()
     {
         _currentHealth = _health;
+        Animator = GetComponent<Animator>();
+
+        _movePlayer = GetComponent<MovePlayer>();
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F) && _isAttack)
-        {
-            AnimationAttack();
-            PerformAttack();
-        }
-        else if(Input.GetKeyDown(KeyCode.R) && _isAttack) 
-        {
-            AnimationAttack();
-            PerformAttack();
-        }
-        else
-        {
-            _isAttack = false;
-        }
+        Attack();
     }
 
     public void ApplyDamage(int damage)
@@ -50,52 +40,51 @@ public class PlayerAttack : PlayerAnimationController
         }
     }
 
-    public void AttackPLayer(EnemyContr enemy)
+    private void Attack()
     {
-        _currentEnemy = enemy;
-
-        _isAttack = true;
-
-        EnableAttackAnimation(_isAttack);
+        if (Input.GetKeyDown(KeyCode.F) && _isAttack && _currentEnemy != null)
+        {
+            AttackAnimation(AttackSword, true);
+            PerformAttack();
+        }
+        else if (Input.GetKeyDown(KeyCode.R) && _isAttack && _currentEnemy != null)
+        {
+            AttackAnimation(StringAttack, true);
+            PerformAttack();
+        }
+        else
+        {
+            AttackAnimation(AttackSword, false);
+            AttackAnimation(StringAttack, false);
+        }
     }
 
     private void PerformAttack()
     {
-        if(_currentEnemy != null && _isAttack) 
-        {
-            _currentEnemy.TakeDamage(_damage);
-        }
+        _currentEnemy.TakeDamage(_damage);
     }
 
-    /*private void CheckPlayer(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out EnemyContr enemy))
         {
             _currentEnemy = enemy;
+
+            if (_isSword)
+            {
+                _isAttack = true;
+
+                EnableAttackAnimation(_isAttack);
+            }
         }
 
-        StartAttack();
-    }*/
-
-    /*private void StartAttack()
-    {
-        if (_currentEnemy != null)
+        if (collision.TryGetComponent(out Sword sword))
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Animator.SetBool("AttackSword",true);
-                _currentEnemy.TakeDamage(_damage);
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                Animator.SetBool("StrikeAttack", true);
-                _currentEnemy.TakeDamage(_damage);
-            }
-            else
-            {
-                Animator.SetBool("AttackSword", false);
-                Animator.SetBool("StrikeAttack", false);
-            }
+            sword.SetActiveSword();
+
+            _isSword = true;
+
+            _movePlayer.EnableSword(_isSword);
         }
-    }*/
+    }
 }

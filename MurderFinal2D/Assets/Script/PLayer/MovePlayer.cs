@@ -10,23 +10,24 @@ public class MovePlayer : PlayerAnimationController
 
     private Rigidbody2D _rigidbody2D;
 
-    private PlayerAnimationController controller;
-
-    private const string Horizontal = "Horizontal";
-
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>(); 
-        controller = GetComponent<PlayerAnimationController>();
+        Animator = GetComponent<Animator>();
     }
 
-    private void Update()
+    protected void Update()
     {
         Rotate();
 
         SelectAnimation();
 
         FixedUpdate();  
+    }
+
+    public void EnableSword(bool isSword)
+    {
+        _isSword = isSword; 
     }
 
     private void FixedUpdate()

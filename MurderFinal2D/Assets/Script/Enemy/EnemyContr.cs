@@ -12,9 +12,12 @@ public class EnemyContr : MonoBehaviour
     [SerializeField] private float _attackDistanceTarget;
     [SerializeField] private float _speed;
     [SerializeField] private int _damage;
+
     [SerializeField] private PlayerAttack _target;
 
     [SerializeField] private float _attackCoolDown = 2f;
+
+    private int _currentHealth;
 
     private bool _isAttacking = false;
     private bool _isDeath = false;
@@ -28,11 +31,13 @@ public class EnemyContr : MonoBehaviour
     private const string DeathEnemy = "DeathEnemy";
 
     public event UnityAction<EnemyContr> Dying;
+    public event UnityAction<int, int> HealthChangedEnemy;
 
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _currentHealth = _health;
     }
 
     private void Update()
@@ -59,22 +64,25 @@ public class EnemyContr : MonoBehaviour
             }
         }
         else
+        {
             Death();
+        }
     }
 
     public void TakeDamage(int damage)
     {
-        _health -= damage;
-        Debug.Log("Çהמנמגüו Goblina - " + _health);
+        _currentHealth -= damage;
+        HealthChangedEnemy?.Invoke(_currentHealth, _health);
 
-        if (_health <= 0 && !_isDeath)
+        if (_currentHealth <= 0 && !_isDeath)
         {
             _isDeath = true;
-            Destroy(gameObject);
             Dying?.Invoke(this);
 
             StopAttacking();
             StopHunding();
+
+            //Destroy(gameObject);
         }
     }
 
@@ -118,23 +126,13 @@ public class EnemyContr : MonoBehaviour
         _isAttacking = false;
     }
 
-    private bool TryGetTarget(out PlayerAttack target)
-    {
-        target = null;
-
-        return true;
-    }
-
     private void AttackTarget()
     {
         if (Time.time >= _attackCoolDown)
         {
             StartCoroutine(ResetAttack());
 
-            if (TryGetTarget(out PlayerAttack target))
-            {
-                target.ApplyDamage(_damage);
-            }
+            _target.ApplyDamage(_damage);
         }
     }
 

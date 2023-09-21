@@ -2,23 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPortal : Player
+public class PlayerPortal : MonoBehaviour
 {
     private bool _isTransition = true;
 
-    public void PlayPortal(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        TransitionPortal(collision);
-    }
-
-    public void StopPortal(Collider2D collision)
-    {
-
-    }
-
-    public void TransitionPortal(Collider2D collision)
-    {
-        if(collision.gameObject.TryGetComponent(out Portal portal))
+        if(collision.TryGetComponent(out Portal portal)) 
         {
             if (_isTransition)
             {

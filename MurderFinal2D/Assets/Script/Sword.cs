@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
-    private bool _isSword = false;
-
-    public void SetActiveSword(PlayerAnimationController animationController)
+    public void SetActiveSword()
     {
-        
-
         gameObject.SetActive(false);
-        _isSword = true;
-
-         animationController.EnableSwordAnimation(_isSword);
     }
 }

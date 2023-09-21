@@ -72,10 +72,10 @@ public class EnemyController : Enemy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.TryGetComponent(out Player player))
+        if(collision.gameObject.TryGetComponent(out PlayerAttack player))
         {
             _animator.Play("AttackGoblin");
-            //player.ApplyDamage(_damage);
+            player.ApplyDamage(_damage);
         }
     }
 }
