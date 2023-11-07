@@ -8,12 +8,12 @@ public class HealthBar : Bar
 
     private void OnEnable()
     {
-        _player.HealthChanched += OnValueChanged;
+        //_player.HealthChanched += OnValueChanged;
         Slider.value = 1;
     }
 
     private void OnDisable()
     {
-        _player.HealthChanched -= OnValueChanged;   
+        //_player.HealthChanched -= OnValueChanged;   
     }
 }

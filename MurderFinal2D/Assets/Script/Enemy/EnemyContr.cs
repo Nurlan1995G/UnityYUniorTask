@@ -1,14 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyContr : MonoBehaviour
+public class EnemyContr : MonoBehaviour,IDamageble
 {
     [SerializeField] private int _health;
-    [SerializeField] private float _agroDistance;
+    [SerializeField] private float _agroDistance=10f;
     [SerializeField] private float _attackDistanceTarget;
     [SerializeField] private float _speed;
     [SerializeField] private int _damage;
@@ -31,7 +30,7 @@ public class EnemyContr : MonoBehaviour
     private const string DeathEnemy = "DeathEnemy";
 
     public event UnityAction<EnemyContr> Dying;
-    public event UnityAction<int, int> HealthChangedEnemy;
+    private event UnityAction<int, int> HealthChangedEnemy;
 
     private void Start()
     {
@@ -132,7 +131,7 @@ public class EnemyContr : MonoBehaviour
         {
             StartCoroutine(ResetAttack());
 
-            _target.ApplyDamage(_damage);
+            _target.TakeDamage(_damage);
         }
     }
 

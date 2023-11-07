@@ -3,88 +3,75 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerAttack : PlayerAnimationController
+public class PlayerAttack : Heal,IDamageble
 {
+    private bool _isAttacking = false;
     [SerializeField] private int _damage;
-    [SerializeField] private int _health;
 
-    private int _currentHealth;
-    protected EnemyContr _currentEnemy;
+    private EnemyContr _enemy;
 
-    private MovePlayer _movePlayer;
+    private PlayerAnimationController _controller;
 
-    public event UnityAction<int,int> HealthChanched;
+    public bool IsAttacking => _isAttacking;  
+    public bool IsSwordAttack { get; private set; }
 
-    private void Start()
-    {
-        _currentHealth = _health;
-        Animator = GetComponent<Animator>();
-
-        _movePlayer = GetComponent<MovePlayer>();
-    }
+    public event UnityAction<int> HealthChanched;
 
     private void Update()
     {
-        Attack();
+        
     }
 
-    public void ApplyDamage(int damage)
+    public void TakeDamage(int damage)
     {
-        _currentHealth -= damage;
-        HealthChanched?.Invoke(_currentHealth, _health);
+        Health -= damage;
+        HealthChanched?.Invoke(Health);
 
-        if (_currentHealth <= 0)
+        if (Health <= 0)
         {
             Time.timeScale = 0;
-            gameObject.SetActive(false);
         }
     }
 
-    private void Attack()
+    public void PerformAttack(EnemyContr enemy)
     {
-        if (Input.GetKeyDown(KeyCode.F) && _isAttack && _currentEnemy != null)
-        {
-            AttackAnimation(AttackSword, true);
-            PerformAttack();
-        }
-        else if (Input.GetKeyDown(KeyCode.R) && _isAttack && _currentEnemy != null)
-        {
-            AttackAnimation(StringAttack, true);
-            PerformAttack();
-        }
-        else
-        {
-            AttackAnimation(AttackSword, false);
-            AttackAnimation(StringAttack, false);
-        }
+        _enemy.TakeDamage(_damage);
+        //enemy.TakeDamage(Damage);
     }
 
-    private void PerformAttack()
+    private EnemyContr CheckEnemy(EnemyContr enemyContr)
     {
-        _currentEnemy.TakeDamage(_damage);
+        if(enemyContr != null)
+        {
+            return enemyContr;
+        }
+
+        return null;
+    }
+
+    private void AttackSword()
+    {
+        if (IsSwordAttack)
+        {
+            _isAttacking = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out EnemyContr enemy))
         {
-            _currentEnemy = enemy;
+            CheckEnemy(enemy);
 
-            if (_isSword)
-            {
-                _isAttack = true;
-
-                EnableAttackAnimation(_isAttack);
-            }
+            AttackSword();
         }
 
         if (collision.TryGetComponent(out Sword sword))
         {
             sword.SetActiveSword();
 
-            _isSword = true;
-
-            _movePlayer.EnableSword(_isSword);
+            if (sword.IsSword == true)
+                IsSwordAttack = true;
         }
     }
 }

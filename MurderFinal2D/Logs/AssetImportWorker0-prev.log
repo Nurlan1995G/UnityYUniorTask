@@ -9,13 +9,13 @@ C:\Unity\2020.3.33f1\2021.3.4f1\Editor\Unity.exe
 -batchMode
 -noUpm
 -name
-AssetImportWorker1
+AssetImportWorker0
 -projectPath
 D:/Unity Ucheba, Game 3d/MurderFinal2D
 -logFile
-Logs/AssetImportWorker1.log
+Logs/AssetImportWorker0.log
 -srvPort
-58330
+49982
 Successfully changed project path to: D:/Unity Ucheba, Game 3d/MurderFinal2D
 D:/Unity Ucheba, Game 3d/MurderFinal2D
 [UnityMemory] Configuration Parameters - Can be set up in boot.config
@@ -47,15 +47,3 @@ D:/Unity Ucheba, Game 3d/MurderFinal2D
     "memorysetup-temp-allocator-size-cloud-worker=32768"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Refreshing native plugins compatible for Editor in 18795.15 ms, found 4 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Initialize engine version: 2021.3.4f1 (cb45f9cae8b7)
-[Subsystems] Discovering subsystems at path C:/Unity/2020.3.33f1/2021.3.4f1/Editor/Data/Resources/UnitySubsystems
-[Subsystems] Discovering subsystems at path D:/Unity Ucheba, Game 3d/MurderFinal2D/Assets
-GfxDevice: creating device client; threaded=0; jobified=0
-Direct3D:
-    Version:  Direct3D 11.0 [level 11.1]
-    Renderer: NVIDIA GeForce MX250 (ID=0x1d13)
-    Vendor:   NVIDIA
-    VRAM:     1983 MB
-    Driver:   30.0.15.1215

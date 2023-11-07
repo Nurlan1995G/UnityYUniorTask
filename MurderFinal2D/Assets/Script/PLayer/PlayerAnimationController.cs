@@ -3,84 +3,54 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public abstract class PlayerAnimationController : MonoBehaviour
+public class PlayerAnimationController : MonoBehaviour
 {
-    protected Animator Animator;
+    private Animator _animator;
 
-    [SerializeField] protected bool _isSword = false;
-    [SerializeField] protected bool _isAttack = false;
+    private bool _isSword = false;
+    private bool _isAttack = false;
 
-    public const string Horizontal = "Horizontal";
-    public const string Idle = "Idle";
-    public const string Walk = "Walk";
-    public const string Jump = "Jump";
-    public const string JumpSword = "JumpSword";
-    public const string AttackSword = "AttackSword";
-    public const string StringAttack = "StrikeAttack";
-
-    protected string Num = "Nurlan";
-
-    private void Update()
+    private void Start()
     {
-        
+        _animator = GetComponent<Animator>();
     }
 
-    protected void EnableAttackAnimation(bool isAttack)
+    public void AttackAnimation(string anim,bool isAttack)
     {
-        _isAttack = isAttack;
+        _animator.SetBool(anim, isAttack);
     }
 
-    protected void EnableSwordAnimation(bool sword)
+    public void WalkAndIdleAnimation(float horizontal)
     {
-        _isSword = sword;
-    }
-
-    protected void AttackAnimation(string anim,bool isAttack)
-    {
-        Animator.SetBool(anim, isAttack);
-    }
-
-    protected void SelectAnimation()
-    {
-        if (!_isSword)
-            WalkAnimation();
-        else
-            WalkToSwordAnim();
-    }
-
-    private void WalkAnimation()
-    {
-        if (Input.GetKey(KeyCode.Space))
+        if(horizontal == 0)
         {
-            Animator.Play(Jump);
+            _animator.Play(Config.Idle);
         }
         else
         {
-            if (Input.GetAxis(Horizontal) == 0)
-            {
-                Animator.Play(Idle);
-            }
-            else
-            {
-                Animator.Play(Walk);
-            }
+            _animator.Play(Config.Walk);
         }
+    }
+
+    public void JumpAnimation()
+    {
+         _animator.Play(Config.Jump);
     }
 
     private void WalkToSwordAnim()
     {
-        Animator.SetBool("HaveSword", _isSword);
+        _animator.SetBool(Config.HaveSword, _isSword);
 
         if (Input.GetKeyDown(KeyCode.Space))
-            Animator.Play(JumpSword);
+            _animator.Play(Config.JumpSword);
 
-        if (Input.GetAxis(Horizontal) == 0)
+        if (Input.GetAxis(Config.Horizontal) == 0)
         {
-            Animator.SetBool(("RunSword"), false);
+            _animator.SetBool((Config.RunSword), false);
         }
         else
         {
-            Animator.SetBool(("RunSword"), true);
+            _animator.SetBool((Config.RunSword), true);
         }
     }
 }

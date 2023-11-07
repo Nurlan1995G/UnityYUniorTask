@@ -8,12 +8,12 @@ public class HealthBarEnemy : Bar
 
     private void OnEnable()
     {
-        _enemy.HealthChangedEnemy += OnValueChanged;
+        //_enemy.HealthChangedEnemy += OnValueChanged;
         Slider.value = 1;
     }
 
     private void OnDisable()
     {
-        _enemy.HealthChangedEnemy -= OnValueChanged;
+        //_enemy.HealthChangedEnemy -= OnValueChanged;
     }
 }

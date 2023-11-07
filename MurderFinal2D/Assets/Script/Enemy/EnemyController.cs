@@ -1,81 +1,67 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(Rigidbody2D))]
-public class EnemyController : Enemy
+public class EnemyController : MonoBehaviour
 {
-    [SerializeField] private float _speed;
-    [SerializeField] private float _agroDistance;
-    [SerializeField] private int _damage;
-    [SerializeField] private Transform _target;
+    [SerializeField] private MoveEnemyState _mover;
+    [SerializeField] private AttackEnemyState _attacker;
+    [SerializeField] private AttackTrigger _attackTrigger;
+    [SerializeField] private EnemyAnimation _enemyAnimation;
+    [SerializeField] private AgroDistance _agroDistance; 
 
-    private Rigidbody2D _rigidbody2D;
-    private Animator _animator;
+    [SerializeField] private PlayerAttack _target;
+
+    private void OnEnable()
+    {
+        _agroDistance.MoverToTarget += OnMoverToTarget;
+        _attackTrigger.AttackReached += OnAttackReached;
+    }
+
 
     private void Start()
     {
-        _rigidbody2D = GetComponent<Rigidbody2D>();
-        _animator = GetComponent<Animator>();
+        
     }
 
-    private void Update()
+    private void OnDisable()
     {
-        Distance();
+        _agroDistance.MoverToTarget -= OnMoverToTarget;
+        _attackTrigger.AttackReached -= OnAttackReached;
     }
 
-    private void Distance()
+    public void Death()
     {
-        float distanceToTarget = Vector2.Distance(transform.position, _target.position);
-
-        if (distanceToTarget < _agroDistance)
-        {
-            _animator.Play("RunGoblin");
-            StartHunding();
-        }
-        else if (distanceToTarget >= _agroDistance)
-        {
-            _animator.Play("IdleGoblin");
-            StopHunding();
-        }
+        _attacker.SetEnemy(this);
+        _enemyAnimation.DeathAnimation();   
+        Destroy(gameObject);
     }
 
-    private void StartHunding()
+    public void AttackAnimation()
     {
-        if (_target.position.x < transform.position.x)
+        _enemyAnimation.AttackAnimation();
+    }
+
+    private void OnMoverToTarget()
+    {
+        if (_agroDistance.IsMover)
         {
-            Move(-_speed);
-            Rotate(0);
-        }
-        else if (_target.position.x > transform.position.x)
-        {
-            Move(_speed);
-            Rotate(180);
+            MoveToTarget();
+            _enemyAnimation.WalkingAnimation();
+            _mover.MoveEnemy();
         }
     }
 
-    private void Move(float speed)
+    private void MoveToTarget()
     {
-        _rigidbody2D.velocity = new Vector2(speed, _rigidbody2D.velocity.y);
+        _mover.SetTarget(_target.transform);
     }
 
-    private void Rotate(int angle)
+    private void OnAttackReached()
     {
-        transform.localRotation = Quaternion.Euler(0, angle, 0);
-    }
+        //Ќужно как-то сделать так чтобы MoverEnemyState отключилс€, возможно попробовать через булевые переменные
 
-    private void StopHunding()
-    {
-        _rigidbody2D.velocity = new Vector2(0, _rigidbody2D.velocity.y);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if(collision.gameObject.TryGetComponent(out PlayerAttack player))
-        {
-            _animator.Play("AttackGoblin");
-            player.ApplyDamage(_damage);
-        }
+        _attacker.Attack();
     }
 }
