@@ -1,19 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class HealthBar : Bar
+public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private PlayerAttack _player;
+    [SerializeField] private EnemyView _enemy;
+    [SerializeField] private Slider _slider;
+
+    private Health _health;
+
+    private void OnValidate()
+    {
+        if( _enemy == null)
+            _enemy = GetComponentInParent<EnemyView>();
+    }
+
+    private void Awake()
+    {
+        _health = _enemy.Health;
+    }
 
     private void OnEnable()
     {
-        //_player.HealthChanched += OnValueChanged;
-        Slider.value = 1;
+        _health.HealthChanged += OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        //_player.HealthChanched -= OnValueChanged;   
+        _health.HealthChanged -= OnHealthChanged;
+    }
+
+    private void OnHealthChanged(int currentHealth, int maxHealth)
+    {
+        _slider.value = currentHealth / maxHealth;
     }
 }

@@ -12,7 +12,7 @@ public class EnemyContr : MonoBehaviour,IDamageble
     [SerializeField] private float _speed;
     [SerializeField] private int _damage;
 
-    [SerializeField] private PlayerAttack _target;
+    [SerializeField] private Player _target;
 
     [SerializeField] private float _attackCoolDown = 2f;
 
@@ -131,7 +131,7 @@ public class EnemyContr : MonoBehaviour,IDamageble
         {
             StartCoroutine(ResetAttack());
 
-            _target.TakeDamage(_damage);
+            //_target.TakeDamage(_damage);
         }
     }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerAttack : Heal,IDamageble
+public class PlayerAttack : IDamageble
 {
     private bool _isAttacking = false;
     [SerializeField] private int _damage;
@@ -24,13 +24,7 @@ public class PlayerAttack : Heal,IDamageble
 
     public void TakeDamage(int damage)
     {
-        Health -= damage;
-        HealthChanched?.Invoke(Health);
-
-        if (Health <= 0)
-        {
-            Time.timeScale = 0;
-        }
+        
     }
 
     public void PerformAttack(EnemyContr enemy)
